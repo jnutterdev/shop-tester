@@ -1,0 +1,10 @@
+fragment ProductParts on Product {
+  __typename
+  title
+  description
+  price
+  stock
+  category
+  image
+  featured
+}

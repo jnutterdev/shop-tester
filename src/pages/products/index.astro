@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProducts = await getCollection('products');
+const categories = [...new Set(allProducts.map(p => p.data.category))].sort();
+---
+
+<Layout title="All Products — The Shop">
+  <h1>All Products</h1>
+
+  {categories.map(category => {
+    const categoryProducts = allProducts.filter(p => p.data.category === category);
+    return (
+      <section class="category-section">
+        <h2>{category}</h2>
+        <div class="product-grid">
+          {categoryProducts.map(product => (
+            <ProductCard
+              id={product.id}
+              title={product.data.title}
+              description={product.data.description}
+              price={product.data.price}
+              stock={product.data.stock}
+              image={product.data.image}
+              category={product.data.category}
+              url={`/products/${product.id}`}
+            />
+          ))}
+        </div>
+      </section>
+    );
+  })}
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2rem;
+    margin: 0 0 2rem;
+  }
+
+  .category-section {
+    margin-bottom: 3rem;
+  }
+
+  .category-section h2 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+</style>

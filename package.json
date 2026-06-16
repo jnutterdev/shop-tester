@@ -1,0 +1,16 @@
+{
+  "name": "the-shop",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "tinacms dev -c \"astro dev\"",
+    "build": "tinacms build && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tinacms/cli": "^2.5.1",
+    "astro": "^6.4.7",
+    "tinacms": "^3.9.3"
+  }
+}

@@ -1,0 +1,151 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map(product => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const { title, description, price, stock, image, category } = product.data;
+const inStock = stock > 0;
+const formattedPrice = price.toFixed(2);
+const productUrl = `/products/${product.id}`;
+---
+
+<Layout title={`${title} — The Shop`}>
+  <a href="/products" class="back-link">← Back to Products</a>
+
+  <div class="product-detail">
+    <div class="product-image">
+      {image && image !== '/images/placeholder.jpg'
+        ? <img src={image} alt={title} />
+        : <div class="image-placeholder">📦</div>
+      }
+    </div>
+
+    <div class="product-info">
+      <span class="category">{category}</span>
+      <h1>{title}</h1>
+      <p class="description">{description}</p>
+      <p class="price">${formattedPrice}</p>
+
+      <p class="stock-status">
+        {inStock ? `✓ In stock (${stock} available)` : '✗ Out of stock'}
+      </p>
+
+      {inStock ? (
+        <button
+          class="snipcart-add-item add-to-cart-btn"
+          data-item-id={product.id}
+          data-item-name={title}
+          data-item-price={formattedPrice}
+          data-item-url={productUrl}
+          data-item-description={description}
+          data-item-image={image || ''}
+          data-item-max-quantity={stock}
+        >
+          Add to Cart
+        </button>
+      ) : (
+        <button disabled class="add-to-cart-btn disabled">Out of Stock</button>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+
+  .back-link:hover { color: var(--color-accent); }
+
+  .product-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 640px) {
+    .product-detail { grid-template-columns: 1fr; }
+  }
+
+  .product-image {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-placeholder { font-size: 5rem; }
+
+  .category {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .description {
+    color: var(--color-muted);
+    line-height: 1.7;
+    margin: 0 0 1.5rem;
+  }
+
+  .price {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+
+  .stock-status {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  .add-to-cart-btn {
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .add-to-cart-btn:hover { background: var(--color-accent-hover); }
+
+  .add-to-cart-btn.disabled {
+    background: var(--color-border);
+    color: var(--color-muted);
+    cursor: not-allowed;
+  }
+</style>

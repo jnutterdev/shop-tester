@@ -1,0 +1,133 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Snipcart -->
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.3/default/snipcart.css" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      :root {
+        --color-bg: #ffffff;
+        --color-text: #1a1a1a;
+        --color-muted: #666666;
+        --color-border: #e0e0e0;
+        --color-accent: #2c5282;
+        --color-accent-hover: #1a3a5c;
+        --color-surface: #f7f7f7;
+        --font-base: 'Inter', sans-serif;
+        --radius: 6px;
+        --max-width: 1100px;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-base);
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      a { color: var(--color-accent); }
+      a:hover { color: var(--color-accent-hover); }
+
+      header {
+        border-bottom: 1px solid var(--color-border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header nav {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      header nav a {
+        text-decoration: none;
+        font-weight: 500;
+        color: var(--color-text);
+      }
+
+      header nav a:hover { color: var(--color-accent); }
+
+      .site-title {
+        font-weight: 600;
+        font-size: 1.25rem;
+        text-decoration: none;
+        color: var(--color-text);
+      }
+
+      .cart-btn {
+        background: var(--color-accent);
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .cart-btn:hover { background: var(--color-accent-hover); }
+
+      main {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      footer {
+        margin-top: 4rem;
+        padding: 2rem;
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--color-muted);
+        border-top: 1px solid var(--color-border);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="site-title">📚 The Shop</a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <button class="cart-btn snipcart-checkout">
+          Cart (<span class="snipcart-items-count">0</span>)
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p>&copy; {new Date().getFullYear()} The Shop. All rights reserved.</p>
+    </footer>
+
+    <!-- Snipcart -->
+    <div
+      hidden
+      id="snipcart"
+      data-api-key="YOUR_SNIPCART_PUBLIC_API_KEY"
+      data-currency="usd"
+    ></div>
+    <script src="https://cdn.snipcart.com/themes/v3.7.3/default/snipcart.js"></script>
+  </body>
+</html>

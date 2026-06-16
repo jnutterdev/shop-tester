@@ -1,0 +1,158 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  image?: string;
+  category: string;
+  url: string;
+}
+
+const { id, title, description, price, stock, image, category, url } = Astro.props;
+const inStock = stock > 0;
+const formattedPrice = price.toFixed(2);
+---
+
+<article class="product-card">
+  <a href={url} class="product-image-link">
+    <div class="product-image">
+      {image && image !== '/images/placeholder.jpg'
+        ? <img src={image} alt={title} />
+        : <div class="image-placeholder">📦</div>
+      }
+    </div>
+  </a>
+  <div class="product-info">
+    <span class="product-category">{category}</span>
+    <h2 class="product-title"><a href={url}>{title}</a></h2>
+    <p class="product-description">{description}</p>
+    <div class="product-footer">
+      <span class="product-price">${formattedPrice}</span>
+      {inStock ? (
+        <button
+          class="snipcart-add-item add-to-cart-btn"
+          data-item-id={id}
+          data-item-name={title}
+          data-item-price={formattedPrice}
+          data-item-url={url}
+          data-item-description={description}
+          data-item-image={image || ''}
+          data-item-max-quantity={stock}
+        >
+          Add to Cart
+        </button>
+      ) : (
+        <span class="out-of-stock">Out of Stock</span>
+      )}
+    </div>
+    <p class="stock-count">{inStock ? `${stock} in stock` : 'Unavailable'}</p>
+  </div>
+</article>
+
+<style>
+  .product-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s;
+  }
+
+  .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+  .product-image-link { display: block; }
+
+  .product-image {
+    background: var(--color-surface);
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-placeholder {
+    font-size: 3rem;
+  }
+
+  .product-info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+  }
+
+  .product-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  .product-title {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .product-title a {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .product-title a:hover { color: var(--color-accent); }
+
+  .product-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.5;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .product-price {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .add-to-cart-btn {
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .add-to-cart-btn:hover { background: var(--color-accent-hover); }
+
+  .out-of-stock {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .stock-count {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+</style>
